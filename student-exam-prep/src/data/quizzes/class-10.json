@@ -1,0 +1,79 @@
+{
+  "quizzes": [
+    {
+      "subject": "Math",
+      "questions": [
+        {
+          "question": "What is the quadratic formula?",
+          "options": ["x = (-b ± √(b²-4ac)) / 2a", "x = (b ± √(b²+4ac)) / 2a", "x = (b ± √(b²-4ac)) / a", "x = (-b ± √(b²+4ac)) / 2a"],
+          "answer": 0
+        },
+        {
+          "question": "What is the value of π (pi) to two decimal places?",
+          "options": ["3.14", "3.15", "3.16", "3.17"],
+          "answer": 0
+        }
+      ]
+    },
+    {
+      "subject": "Physics",
+      "questions": [
+        {
+          "question": "What is Newton's second law of motion?",
+          "options": ["F = ma", "F = mv", "F = m/a", "F = m + a"],
+          "answer": 0
+        },
+        {
+          "question": "What is the unit of force?",
+          "options": ["Joule", "Newton", "Watt", "Pascal"],
+          "answer": 1
+        }
+      ]
+    },
+    {
+      "subject": "Chemistry",
+      "questions": [
+        {
+          "question": "What is the chemical symbol for water?",
+          "options": ["H2O", "O2", "CO2", "NaCl"],
+          "answer": 0
+        },
+        {
+          "question": "What is the pH of pure water?",
+          "options": ["7", "0", "14", "10"],
+          "answer": 0
+        }
+      ]
+    },
+    {
+      "subject": "Biology",
+      "questions": [
+        {
+          "question": "What is the powerhouse of the cell?",
+          "options": ["Nucleus", "Mitochondria", "Ribosome", "Endoplasmic Reticulum"],
+          "answer": 1
+        },
+        {
+          "question": "What is the process of photosynthesis?",
+          "options": ["Conversion of light energy into chemical energy", "Conversion of chemical energy into light energy", "Conversion of heat energy into light energy", "Conversion of light energy into heat energy"],
+          "answer": 0
+        }
+      ]
+    },
+    {
+      "subject": "English",
+      "questions": [
+        {
+          "question": "What is the synonym of 'happy'?",
+          "options": ["Sad", "Joyful", "Angry", "Bored"],
+          "answer": 1
+        },
+        {
+          "question": "What is the antonym of 'difficult'?",
+          "options": ["Easy", "Hard", "Challenging", "Tough"],
+          "answer": 0
+        }
+      ]
+    }
+  ]
+}

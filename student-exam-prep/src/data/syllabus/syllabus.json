@@ -1,0 +1,64 @@
+{
+  "syllabus": {
+    "class-6": {
+      "subjects": [
+        "Math",
+        "Science",
+        "English",
+        "Social Studies"
+      ]
+    },
+    "class-7": {
+      "subjects": [
+        "Math",
+        "Science",
+        "English",
+        "Social Studies"
+      ]
+    },
+    "class-8": {
+      "subjects": [
+        "Math",
+        "Science",
+        "English",
+        "Social Studies"
+      ]
+    },
+    "class-9": {
+      "subjects": [
+        "Math",
+        "Physics",
+        "Chemistry",
+        "Biology",
+        "English"
+      ]
+    },
+    "class-10": {
+      "subjects": [
+        "Math",
+        "Physics",
+        "Chemistry",
+        "Biology",
+        "English"
+      ]
+    },
+    "class-11": {
+      "subjects": [
+        "Math",
+        "Physics",
+        "Chemistry",
+        "Biology",
+        "English"
+      ]
+    },
+    "class-12": {
+      "subjects": [
+        "Math",
+        "Physics",
+        "Chemistry",
+        "Biology",
+        "English"
+      ]
+    }
+  }
+}

@@ -1,0 +1,64 @@
+{
+  "quizzes": {
+    "math": [
+      {
+        "question": "What is the derivative of x^2?",
+        "options": ["2x", "x^2", "2", "x"],
+        "answer": "2x"
+      },
+      {
+        "question": "What is the integral of 1/x?",
+        "options": ["ln|x| + C", "x + C", "1/x + C", "x^2 + C"],
+        "answer": "ln|x| + C"
+      }
+    ],
+    "physics": [
+      {
+        "question": "What is the unit of force?",
+        "options": ["Newton", "Joule", "Pascal", "Watt"],
+        "answer": "Newton"
+      },
+      {
+        "question": "What is the speed of light?",
+        "options": ["3 x 10^8 m/s", "3 x 10^6 m/s", "3 x 10^7 m/s", "3 x 10^9 m/s"],
+        "answer": "3 x 10^8 m/s"
+      }
+    ],
+    "chemistry": [
+      {
+        "question": "What is the chemical symbol for water?",
+        "options": ["H2O", "O2", "CO2", "H2"],
+        "answer": "H2O"
+      },
+      {
+        "question": "What is the pH of pure water?",
+        "options": ["7", "0", "14", "10"],
+        "answer": "7"
+      }
+    ],
+    "biology": [
+      {
+        "question": "What is the powerhouse of the cell?",
+        "options": ["Nucleus", "Mitochondria", "Ribosome", "Endoplasmic Reticulum"],
+        "answer": "Mitochondria"
+      },
+      {
+        "question": "What is the basic unit of life?",
+        "options": ["Tissue", "Organ", "Cell", "Organism"],
+        "answer": "Cell"
+      }
+    ],
+    "english": [
+      {
+        "question": "What is the synonym of 'happy'?",
+        "options": ["Sad", "Joyful", "Angry", "Bored"],
+        "answer": "Joyful"
+      },
+      {
+        "question": "What is the antonym of 'difficult'?",
+        "options": ["Easy", "Hard", "Complicated", "Challenging"],
+        "answer": "Easy"
+      }
+    ]
+  }
+}

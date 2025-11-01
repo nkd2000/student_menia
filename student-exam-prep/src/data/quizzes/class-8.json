@@ -1,0 +1,29 @@
+{
+  "quizzes": [
+    {
+      "question": "What is the value of 7 + 5?",
+      "options": ["10", "11", "12", "13"],
+      "answer": "12"
+    },
+    {
+      "question": "Which of the following is a mammal?",
+      "options": ["Shark", "Eagle", "Elephant", "Frog"],
+      "answer": "Elephant"
+    },
+    {
+      "question": "What is the main theme of 'The Lion and the Mouse'?",
+      "options": ["Friendship", "Bravery", "Wisdom", "Greed"],
+      "answer": "Friendship"
+    },
+    {
+      "question": "What is the capital of France?",
+      "options": ["Berlin", "Madrid", "Paris", "Rome"],
+      "answer": "Paris"
+    },
+    {
+      "question": "Which gas do plants absorb from the atmosphere?",
+      "options": ["Oxygen", "Carbon Dioxide", "Nitrogen", "Hydrogen"],
+      "answer": "Carbon Dioxide"
+    }
+  ]
+}

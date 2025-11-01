@@ -1,0 +1,29 @@
+{
+  "quizzes": [
+    {
+      "question": "What is the value of 7 + 5?",
+      "options": ["10", "11", "12", "13"],
+      "answer": "12"
+    },
+    {
+      "question": "Which of the following is a mammal?",
+      "options": ["Shark", "Eagle", "Dolphin", "Lizard"],
+      "answer": "Dolphin"
+    },
+    {
+      "question": "What is the main theme of 'The Lion and the Mouse'?",
+      "options": ["Friendship", "Bravery", "Greed", "Wisdom"],
+      "answer": "Friendship"
+    },
+    {
+      "question": "Which planet is known as the Red Planet?",
+      "options": ["Earth", "Mars", "Jupiter", "Saturn"],
+      "answer": "Mars"
+    },
+    {
+      "question": "What is the capital of France?",
+      "options": ["Berlin", "Madrid", "Paris", "Rome"],
+      "answer": "Paris"
+    }
+  ]
+}

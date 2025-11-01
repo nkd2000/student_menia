@@ -1,0 +1,54 @@
+{
+  "quizzes": [
+    {
+      "question": "What is the formula for the area of a triangle?",
+      "options": [
+        "1/2 * base * height",
+        "base * height",
+        "pi * radius^2",
+        "length * width"
+      ],
+      "answer": "1/2 * base * height"
+    },
+    {
+      "question": "What is the chemical symbol for water?",
+      "options": [
+        "H2O",
+        "O2",
+        "CO2",
+        "NaCl"
+      ],
+      "answer": "H2O"
+    },
+    {
+      "question": "What is the process of photosynthesis?",
+      "options": [
+        "Conversion of light energy into chemical energy",
+        "Breaking down glucose for energy",
+        "Absorption of nutrients from the soil",
+        "Respiration in plants"
+      ],
+      "answer": "Conversion of light energy into chemical energy"
+    },
+    {
+      "question": "Who wrote 'Romeo and Juliet'?",
+      "options": [
+        "Charles Dickens",
+        "Mark Twain",
+        "William Shakespeare",
+        "Jane Austen"
+      ],
+      "answer": "William Shakespeare"
+    },
+    {
+      "question": "What is the largest planet in our solar system?",
+      "options": [
+        "Earth",
+        "Mars",
+        "Jupiter",
+        "Saturn"
+      ],
+      "answer": "Jupiter"
+    }
+  ]
+}
