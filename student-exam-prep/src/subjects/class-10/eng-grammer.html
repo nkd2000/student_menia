@@ -1,0 +1,1745 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Grammar Quest - Class 10</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:wght@400;700&family=MedievalSharp&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --theme-gold: #daa520;
+            --theme-gold-dark: #b8860b;
+            --wood-bg: #6f4e37;
+            --wood-frame: #3a2e19;
+            --parchment-bg: #f5f0e1;
+            --parchment-text: #3a2e19;
+            --parchment-border: #c1a980;
+            --correct-color: #28a745;
+            --incorrect-color: #dc3545;
+            --hover-bg: #e8dcc5;
+            --shadow-lg: 0 10px 30px rgba(0, 0, 0, 0.3);
+            --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'EB Garamond', serif;
+            background: linear-gradient(135deg, #2d1810 0%, #4a3520 100%);
+            color: var(--parchment-text);
+            overflow: hidden;
+        }
+        
+        /* Full-Screen Container */
+        .game-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            opacity: 0;
+            transform: scale(0.9);
+            transition: opacity 0.4s, transform 0.4s;
+        }
+        
+        .game-screen.active {
+            display: flex;
+            opacity: 1;
+            transform: scale(1);
+        }
+        
+        /* Animated Background Stars */
+        .stars {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+        
+        .star {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: white;
+            border-radius: 50%;
+            animation: twinkle 3s infinite;
+        }
+        
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 1; }
+        }
+        
+        /* SCREEN 1: CINEMATIC INTRO */
+        #introScreen .intro-content {
+            text-align: center;
+            z-index: 1;
+        }
+        
+        .game-logo {
+            font-family: 'MedievalSharp', cursive;
+            font-size: 72px;
+            color: var(--theme-gold);
+            text-shadow: 0 0 30px rgba(218, 165, 32, 0.8), 3px 3px 10px rgba(0,0,0,0.5);
+            margin-bottom: 20px;
+            animation: glow-pulse 2s ease-in-out infinite;
+        }
+        
+        @keyframes glow-pulse {
+            0%, 100% { text-shadow: 0 0 20px rgba(218, 165, 32, 0.6), 3px 3px 10px rgba(0,0,0,0.5); }
+            50% { text-shadow: 0 0 40px rgba(218, 165, 32, 1), 3px 3px 15px rgba(0,0,0,0.7); }
+        }
+        
+        .game-subtitle {
+            font-size: 28px;
+            color: var(--parchment-bg);
+            margin-bottom: 60px;
+            opacity: 0.9;
+        }
+        
+        .press-start-btn {
+            padding: 20px 60px;
+            font-size: 28px;
+            font-weight: 700;
+            font-family: 'MedievalSharp', cursive;
+            background: linear-gradient(135deg, var(--theme-gold) 0%, var(--theme-gold-dark) 100%);
+            color: var(--wood-frame);
+            border: 4px solid var(--theme-gold-dark);
+            border-radius: 15px;
+            cursor: pointer;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+            transition: all 0.3s;
+            animation: pulse-btn 2s ease-in-out infinite;
+        }
+        
+        @keyframes pulse-btn {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+        
+        .press-start-btn:hover {
+            transform: scale(1.1) translateY(-5px);
+            box-shadow: 0 15px 40px rgba(218, 165, 32, 0.5);
+        }
+        
+        /* SCREEN 2: HERO SETUP */
+        #heroSetupScreen {
+            z-index: 1;
+        }
+        
+        .hero-card {
+            background: var(--parchment-bg);
+            border: 5px solid var(--wood-frame);
+            border-radius: 25px;
+            padding: 50px;
+            max-width: 600px;
+            width: 100%;
+            box-shadow: var(--shadow-lg);
+            position: relative;
+        }
+        
+        .hero-card::before {
+            content: '⚔️';
+            position: absolute;
+            top: -40px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 80px;
+            animation: float 3s ease-in-out infinite;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateX(-50%) translateY(0); }
+            50% { transform: translateX(-50%) translateY(-10px); }
+        }
+        
+        .hero-title {
+            font-family: 'MedievalSharp', cursive;
+            font-size: 36px;
+            text-align: center;
+            margin-bottom: 30px;
+            color: var(--wood-frame);
+        }
+        
+        .form-group {
+            margin-bottom: 30px;
+        }
+        
+        .form-group label {
+            display: block;
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 10px;
+            color: var(--wood-frame);
+        }
+        
+        .form-group input {
+            width: 100%;
+            padding: 18px;
+            font-size: 20px;
+            border: 3px solid var(--parchment-border);
+            border-radius: 12px;
+            font-family: 'EB Garamond', serif;
+            background: rgba(255,255,255,0.8);
+            transition: all 0.3s;
+        }
+        
+        .form-group input:focus {
+            outline: none;
+            border-color: var(--theme-gold);
+            box-shadow: 0 0 15px rgba(218, 165, 32, 0.4);
+        }
+        
+        .begin-btn {
+            width: 100%;
+            padding: 20px;
+            font-size: 24px;
+            font-weight: 700;
+            font-family: 'MedievalSharp', cursive;
+            background: linear-gradient(135deg, var(--theme-gold) 0%, var(--theme-gold-dark) 100%);
+            color: var(--wood-frame);
+            border: 4px solid var(--theme-gold-dark);
+            border-radius: 12px;
+            cursor: pointer;
+            box-shadow: var(--shadow-md);
+            transition: all 0.3s;
+        }
+        
+        .begin-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-lg);
+        }
+        
+        /* SCREEN 3: KINGDOM MAP (FULL VIEWPORT) */
+        #kingdomMapScreen {
+            overflow-y: auto;
+        }
+        
+        .map-container {
+            max-width: 1200px;
+            width: 100%;
+            z-index: 1;
+        }
+        
+        .map-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        
+        .map-title {
+            font-family: 'MedievalSharp', cursive;
+            font-size: 56px;
+            color: var(--theme-gold);
+            text-shadow: 3px 3px 15px rgba(0,0,0,0.6);
+            margin-bottom: 20px;
+        }
+        
+        .hero-stats {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .stat-badge {
+            background: var(--parchment-bg);
+            padding: 15px 30px;
+            border-radius: 15px;
+            border: 3px solid var(--wood-frame);
+            box-shadow: var(--shadow-md);
+        }
+        
+        .stat-label {
+            font-size: 14px;
+            opacity: 0.8;
+        }
+        
+        .stat-value {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--theme-gold);
+        }
+        
+        .kingdoms-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 30px;
+            margin-top: 40px;
+        }
+        
+        .kingdom-card {
+            background: var(--parchment-bg);
+            border: 4px solid var(--wood-frame);
+            border-radius: 20px;
+            padding: 30px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: var(--shadow-md);
+            position: relative;
+        }
+        
+        .kingdom-card:hover:not(.locked) {
+            transform: translateY(-10px);
+            box-shadow: var(--shadow-lg);
+            border-color: var(--theme-gold);
+        }
+        
+        .kingdom-card.locked {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
+        .kingdom-card.completed {
+            border-color: var(--theme-gold);
+            background: linear-gradient(135deg, #fff9e6 0%, #f5f0e1 100%);
+        }
+        
+        .kingdom-card.locked::before {
+            content: '🔒';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 60px;
+            z-index: 1;
+        }
+        
+        .kingdom-icon {
+            font-size: 64px;
+            margin-bottom: 15px;
+        }
+        
+        .kingdom-name {
+            font-size: 22px;
+            font-weight: 700;
+            margin-bottom: 10px;
+            color: var(--wood-frame);
+        }
+        
+        .kingdom-topics {
+            font-size: 13px;
+            opacity: 0.7;
+            margin-bottom: 15px;
+        }
+        
+        .kingdom-gems {
+            font-size: 32px;
+            margin-top: 10px;
+        }
+        
+        .kingdom-score {
+            font-size: 14px;
+            margin-top: 10px;
+            font-weight: 600;
+        }
+        
+        .view-cert-btn {
+            margin-top: 40px;
+            padding: 18px 40px;
+            font-size: 22px;
+            font-family: 'MedievalSharp', cursive;
+            background: linear-gradient(135deg, var(--theme-gold) 0%, var(--theme-gold-dark) 100%);
+            color: var(--wood-frame);
+            border: 4px solid var(--theme-gold-dark);
+            border-radius: 12px;
+            cursor: pointer;
+            box-shadow: var(--shadow-md);
+            transition: all 0.3s;
+        }
+        
+        .view-cert-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-lg);
+        }
+        
+        /* SCREEN 4: PRE-BATTLE BRIEFING */
+        #preBattleScreen {
+            z-index: 1;
+        }
+        
+        .briefing-card {
+            background: var(--parchment-bg);
+            border: 5px solid var(--wood-frame);
+            border-radius: 25px;
+            padding: 60px;
+            max-width: 700px;
+            width: 100%;
+            box-shadow: var(--shadow-lg);
+            text-align: center;
+        }
+        
+        .briefing-icon {
+            font-size: 100px;
+            margin-bottom: 20px;
+            animation: bounce-in 0.6s ease-out;
+        }
+        
+        @keyframes bounce-in {
+            0% { transform: scale(0); }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); }
+        }
+        
+        .briefing-title {
+            font-family: 'MedievalSharp', cursive;
+            font-size: 42px;
+            color: var(--wood-frame);
+            margin-bottom: 20px;
+        }
+        
+        .briefing-description {
+            font-size: 20px;
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+        
+        .mission-objectives {
+            background: rgba(255,255,255,0.5);
+            padding: 25px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            text-align: left;
+        }
+        
+        .mission-objectives h4 {
+            font-size: 20px;
+            margin-bottom: 15px;
+            color: var(--theme-gold-dark);
+        }
+        
+        .mission-objectives ul {
+            list-style: none;
+            padding-left: 0;
+        }
+        
+        .mission-objectives li {
+            font-size: 16px;
+            margin-bottom: 10px;
+            padding-left: 25px;
+            position: relative;
+        }
+        
+        .mission-objectives li::before {
+            content: '⚔️';
+            position: absolute;
+            left: 0;
+        }
+        
+        .ready-prompt {
+            font-size: 26px;
+            font-weight: 700;
+            color: var(--theme-gold-dark);
+            margin-bottom: 30px;
+        }
+        
+        .countdown-display {
+            font-size: 80px;
+            font-weight: 700;
+            color: var(--theme-gold);
+            margin: 20px 0;
+            animation: countdown-pulse 1s ease-in-out;
+        }
+        
+        @keyframes countdown-pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+        }
+        
+        .start-battle-btn {
+            padding: 20px 60px;
+            font-size: 26px;
+            font-family: 'MedievalSharp', cursive;
+            background: linear-gradient(135deg, var(--theme-gold) 0%, var(--theme-gold-dark) 100%);
+            color: var(--wood-frame);
+            border: 4px solid var(--theme-gold-dark);
+            border-radius: 12px;
+            cursor: pointer;
+            box-shadow: var(--shadow-md);
+            transition: all 0.3s;
+        }
+        
+        .start-battle-btn:hover {
+            transform: scale(1.05) translateY(-3px);
+            box-shadow: var(--shadow-lg);
+        }
+        
+        /* SCREEN 5: BATTLE/QUIZ SCREEN (FULL IMMERSIVE) */
+        #battleScreen {
+            overflow-y: auto;
+        }
+        
+        .battle-container {
+            max-width: 900px;
+            width: 100%;
+            z-index: 1;
+        }
+        
+        .battle-header {
+            background: var(--parchment-bg);
+            border: 4px solid var(--wood-frame);
+            border-radius: 20px;
+            padding: 25px;
+            margin-bottom: 20px;
+            box-shadow: var(--shadow-md);
+        }
+        
+        .kingdom-badge {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            padding: 8px 16px;
+            background: linear-gradient(135deg, var(--theme-gold) 0%, var(--theme-gold-dark) 100%);
+            border-radius: 20px;
+            font-weight: 700;
+            font-size: 16px;
+            margin-bottom: 10px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+            color: var(--wood-frame);
+        }
+        
+        .progress-container {
+            margin: 8px 0;
+        }
+        
+        .progress-bar-bg {
+            height: 8px;
+            background: rgba(58, 46, 25, 0.2);
+            border-radius: 999px;
+            overflow: hidden;
+            position: relative;
+            box-shadow: inset 0 1px 3px rgba(0,0,0,0.2);
+        }
+        
+        .progress-bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--theme-gold) 0%, var(--theme-gold-dark) 100%);
+            transition: width 0.5s ease;
+            box-shadow: 0 0 10px rgba(218, 165, 32, 0.8);
+            position: relative;
+        }
+        
+        .progress-bar-fill::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.3) 50%, transparent 100%);
+            animation: shimmer 2s infinite;
+        }
+        
+        @keyframes shimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+        
+        .battle-stats {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 6px;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--wood-frame);
+        }
+        
+        .question-card {
+            background: linear-gradient(135deg, #fff9e6 0%, #f5f0e1 100%);
+            border: 4px solid var(--wood-frame);
+            border-radius: 20px;
+            padding: 20px;
+            margin: 15px 0;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.25), inset 0 1px 0 rgba(255,255,255,0.5);
+            position: relative;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+        
+        .question-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 8px;
+            background: repeating-linear-gradient(
+                90deg,
+                var(--theme-gold) 0px,
+                var(--theme-gold) 20px,
+                transparent 20px,
+                transparent 40px
+            );
+        }
+        
+        .question-card::after {
+            content: '📜';
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 32px;
+            opacity: 0.15;
+        }
+        
+        .challenge-label {
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--theme-gold-dark);
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .question-text {
+            font-size: 20px;
+            font-weight: 700;
+            line-height: 1.4;
+            margin-bottom: 18px;
+            color: var(--wood-frame);
+            text-align: center;
+            padding: 10px 0;
+        }
+        
+        .options-grid {
+            display: grid;
+            gap: 10px;
+            flex: 1;
+            align-content: center;
+        }
+        
+        .option-btn {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 14px 16px;
+            background: linear-gradient(135deg, rgba(255,255,255,0.9) 0%, rgba(245, 240, 225, 0.7) 100%);
+            border: 2px solid var(--parchment-border);
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            font-size: 16px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .option-btn::before {
+            content: '';
+            position: absolute;
+            left: -100%;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(218, 165, 32, 0.2), transparent);
+            transition: left 0.5s;
+        }
+        
+        .option-btn:hover::before {
+            left: 100%;
+        }
+        
+        .option-btn:hover {
+            background: linear-gradient(135deg, #fff9e6 0%, #f5f0e1 100%);
+            border-color: var(--theme-gold);
+            transform: scale(1.02);
+            box-shadow: 0 4px 12px rgba(218, 165, 32, 0.3);
+        }
+        
+        .option-btn.selected {
+            background: linear-gradient(135deg, var(--theme-gold) 0%, var(--theme-gold-dark) 100%);
+            border-color: var(--theme-gold-dark);
+            border-width: 3px;
+            transform: scale(1.02);
+            box-shadow: 0 6px 20px rgba(218, 165, 32, 0.5);
+        }
+        
+        .option-btn.selected span {
+            color: var(--wood-frame);
+            font-weight: 700;
+        }
+        
+        .option-letter {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--wood-frame) 0%, #2d1810 100%);
+            color: var(--theme-gold);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 16px;
+            flex-shrink: 0;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+        }
+        
+        .option-btn.selected .option-letter {
+            background: linear-gradient(135deg, var(--parchment-bg) 0%, #fff9e6 100%);
+            color: var(--wood-frame);
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.8);
+        }
+        
+        .battle-controls {
+            display: flex;
+            gap: 12px;
+            margin-top: 10px;
+        }
+        
+        .control-btn {
+            flex: 1;
+            padding: 14px 20px;
+            font-size: 17px;
+            font-weight: 700;
+            font-family: 'MedievalSharp', cursive;
+            border: 3px solid var(--wood-frame);
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .control-btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+            transform: translate(-50%, -50%);
+            transition: width 0.5s, height 0.5s;
+        }
+        
+        .control-btn:hover:not(:disabled)::before {
+            width: 300px;
+            height: 300px;
+        }
+        
+        .control-btn.prev {
+            background: linear-gradient(135deg, rgba(245, 240, 225, 0.95) 0%, rgba(255, 249, 230, 0.95) 100%);
+            color: var(--wood-frame);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+        }
+        
+        .control-btn.next {
+            background: linear-gradient(135deg, var(--theme-gold) 0%, var(--theme-gold-dark) 100%);
+            color: var(--wood-frame);
+            border-color: var(--theme-gold-dark);
+            box-shadow: 0 4px 15px rgba(218, 165, 32, 0.4);
+        }
+        
+        .control-btn:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.25);
+        }
+        
+        .control-btn:active:not(:disabled) {
+            transform: translateY(0);
+        }
+        
+        .control-btn:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+            filter: grayscale(0.5);
+        }
+        
+        /* SCREEN 6: VICTORY/DEFEAT */
+        #victoryScreen {
+            z-index: 1;
+        }
+        
+        .victory-container {
+            text-align: center;
+        }
+        
+        .victory-icon {
+            font-size: 140px;
+            margin-bottom: 20px;
+            animation: victory-spin 2s ease-in-out;
+        }
+        
+        @keyframes victory-spin {
+            0% { transform: scale(0) rotate(0deg); }
+            50% { transform: scale(1.3) rotate(180deg); }
+            100% { transform: scale(1) rotate(360deg); }
+        }
+        
+        .victory-title {
+            font-family: 'MedievalSharp', cursive;
+            font-size: 52px;
+            color: var(--theme-gold);
+            text-shadow: 3px 3px 15px rgba(0,0,0,0.6);
+            margin-bottom: 15px;
+        }
+        
+        .victory-subtitle {
+            font-size: 24px;
+            color: var(--parchment-bg);
+            opacity: 0.9;
+            margin-bottom: 40px;
+        }
+        
+        .result-card {
+            background: var(--parchment-bg);
+            border: 5px solid var(--wood-frame);
+            border-radius: 25px;
+            padding: 50px;
+            max-width: 550px;
+            box-shadow: var(--shadow-lg);
+        }
+        
+        .gems-earned {
+            font-size: 90px;
+            margin-bottom: 25px;
+        }
+        
+        .score-big {
+            font-size: 64px;
+            font-weight: 700;
+            color: var(--theme-gold);
+            margin-bottom: 15px;
+        }
+        
+        .score-message {
+            font-size: 20px;
+            margin-bottom: 35px;
+            color: var(--wood-frame);
+        }
+        
+        .victory-actions {
+            display: flex;
+            gap: 15px;
+        }
+        
+        .action-btn {
+            flex: 1;
+            padding: 18px;
+            font-size: 18px;
+            font-family: 'MedievalSharp', cursive;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 700;
+        }
+        
+        .action-btn.secondary {
+            background: white;
+            color: var(--wood-frame);
+            border: 3px solid var(--wood-frame);
+        }
+        
+        .action-btn.primary {
+            background: linear-gradient(135deg, var(--theme-gold) 0%, var(--theme-gold-dark) 100%);
+            color: var(--wood-frame);
+            border: 3px solid var(--theme-gold-dark);
+        }
+        
+        .action-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-md);
+        }
+        
+        /* SCREEN 7: FINAL HALL OF FAME */
+        #hallOfFameScreen {
+            overflow-y: auto;
+        }
+        
+        .hall-container {
+            max-width: 1000px;
+            width: 100%;
+            z-index: 1;
+        }
+        
+        .hall-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        
+        .trophy-icon {
+            font-size: 120px;
+            animation: trophy-float 3s ease-in-out infinite;
+        }
+        
+        @keyframes trophy-float {
+            0%, 100% { transform: translateY(0) rotateY(0deg); }
+            50% { transform: translateY(-15px) rotateY(180deg); }
+        }
+        
+        .hall-title {
+            font-family: 'MedievalSharp', cursive;
+            font-size: 56px;
+            color: var(--theme-gold);
+            text-shadow: 3px 3px 15px rgba(0,0,0,0.6);
+            margin: 20px 0;
+        }
+        
+        .hall-subtitle {
+            font-size: 24px;
+            color: var(--parchment-bg);
+            opacity: 0.9;
+        }
+        
+        .certificate-scroll {
+            background: var(--parchment-bg);
+            border: 5px solid var(--wood-frame);
+            border-radius: 25px;
+            padding: 50px;
+            box-shadow: var(--shadow-lg);
+            margin-bottom: 30px;
+        }
+        
+        .cert-header {
+            text-align: center;
+            padding-bottom: 30px;
+            border-bottom: 3px solid var(--parchment-border);
+            margin-bottom: 30px;
+        }
+        
+        .total-score {
+            font-size: 90px;
+            font-weight: 700;
+            color: var(--theme-gold);
+            text-shadow: 2px 2px 5px rgba(0,0,0,0.2);
+        }
+        
+        .total-percent {
+            font-size: 36px;
+            color: var(--wood-frame);
+            margin-top: 10px;
+        }
+        
+        .student-info {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .info-box {
+            background: rgba(255,255,255,0.5);
+            padding: 20px;
+            border-radius: 12px;
+            border: 2px solid var(--parchment-border);
+            text-align: center;
+        }
+        
+        .info-label {
+            font-size: 14px;
+            opacity: 0.7;
+            margin-bottom: 8px;
+        }
+        
+        .info-value {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--wood-frame);
+        }
+        
+        .kingdoms-list {
+            display: grid;
+            gap: 15px;
+        }
+        
+        .kingdom-result {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            padding: 25px;
+            background: rgba(255,255,255,0.5);
+            border-radius: 15px;
+            border-left: 5px solid var(--theme-gold);
+        }
+        
+        .kingdom-result-icon {
+            font-size: 48px;
+        }
+        
+        .kingdom-result-info {
+            flex: 1;
+        }
+        
+        .kingdom-result-name {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+        
+        .kingdom-result-score {
+            font-size: 15px;
+            opacity: 0.8;
+        }
+        
+        .kingdom-result-gems {
+            font-size: 32px;
+        }
+        
+        .hall-actions {
+            display: flex;
+            gap: 15px;
+        }
+        
+        .hall-btn {
+            flex: 1;
+            padding: 20px;
+            font-size: 20px;
+            font-family: 'MedievalSharp', cursive;
+            font-weight: 700;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .hall-btn.share {
+            background: linear-gradient(135deg, var(--theme-gold) 0%, var(--theme-gold-dark) 100%);
+            color: var(--wood-frame);
+            border: 3px solid var(--theme-gold-dark);
+        }
+        
+        .hall-btn.restart {
+            background: white;
+            color: var(--wood-frame);
+            border: 3px solid var(--wood-frame);
+        }
+        
+        .hall-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-lg);
+        }
+        
+        /* Confetti */
+        .confetti {
+            position: fixed;
+            width: 10px;
+            height: 10px;
+            top: -10px;
+            z-index: 999;
+            pointer-events: none;
+        }
+        
+        @keyframes fall {
+            to {
+                transform: translateY(100vh) rotate(360deg);
+            }
+        }
+        
+        /* Responsive */
+        @media (max-width: 640px) {
+            .game-logo { font-size: 48px; }
+            .game-subtitle { font-size: 20px; }
+            .press-start-btn { font-size: 22px; padding: 16px 40px; }
+            .map-title { font-size: 42px; }
+            .victory-title { font-size: 38px; }
+            .hall-title { font-size: 42px; }
+            .total-score { font-size: 60px; }
+            .question-text { font-size: 20px; }
+            .kingdoms-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Animated Stars Background -->
+    <div class="stars" id="starsContainer"></div>
+    
+    <!-- SCREEN 1: CINEMATIC INTRO -->
+    <div id="introScreen" class="game-screen active">
+        <div class="intro-content">
+            <div class="game-logo">⚔️ GRAMMAR QUEST ⚔️</div>
+            <div class="game-subtitle">Embark on an Epic Journey Through 5 Kingdoms</div>
+            <button class="press-start-btn" onclick="showHeroSetup()">🎮 PRESS START</button>
+        </div>
+    </div>
+    
+    <!-- SCREEN 2: HERO SETUP -->
+    <div id="heroSetupScreen" class="game-screen">
+        <div class="hero-card">
+            <h2 class="hero-title">Create Your Hero</h2>
+            <div class="form-group">
+                <label for="heroName">Enter Your Hero Name</label>
+                <input type="text" id="heroName" placeholder="Your name" autocomplete="name">
+            </div>
+            <button class="begin-btn" onclick="beginQuest()">🗡️ Begin Quest</button>
+        </div>
+    </div>
+    
+    <!-- SCREEN 3: KINGDOM MAP -->
+    <div id="kingdomMapScreen" class="game-screen">
+        <div class="map-container">
+            <div class="map-header">
+                <div class="map-title">🗺️ THE QUEST MAP</div>
+                <div class="hero-stats">
+                    <div class="stat-badge">
+                        <div class="stat-label">⚔️ Hero</div>
+                        <div class="stat-value" id="heroDisplay">-</div>
+                    </div>
+                    <div class="stat-badge">
+                        <div class="stat-label">💎 Gems</div>
+                        <div class="stat-value" id="gemsDisplay">0/15</div>
+                    </div>
+                    <div class="stat-badge">
+                        <div class="stat-label">🎯 Progress</div>
+                        <div class="stat-value" id="progressDisplay">0%</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="kingdoms-grid" id="kingdomsGrid"></div>
+            
+            <div style="text-align: center; margin-top: 30px;">
+                <button class="view-cert-btn" onclick="showHallOfFame()" id="viewCertBtn" style="display: none;">
+                    🏆 Enter Hall of Fame
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- SCREEN 4: PRE-BATTLE BRIEFING -->
+    <div id="preBattleScreen" class="game-screen">
+        <div class="briefing-card">
+            <div class="briefing-icon" id="briefingIcon">🏰</div>
+            <div class="briefing-title" id="briefingTitle">Kingdom 1: Grammar Village</div>
+            <div class="briefing-description" id="briefingDesc">Begin your journey in the peaceful village</div>
+            
+            <div class="mission-objectives">
+                <h4>📜 Mission Objectives</h4>
+                <ul>
+                    <li>Defeat 20 grammar challenges</li>
+                    <li>Earn up to 3 gems based on performance</li>
+                    <li>Master: Determiners & Conjunctions</li>
+                </ul>
+            </div>
+            
+            <div class="ready-prompt" id="readyPrompt">Ready for Battle?</div>
+            <div class="countdown-display" id="countdownDisplay" style="display: none;"></div>
+            <button class="start-battle-btn" onclick="startCountdown()">⚔️ START BATTLE</button>
+        </div>
+    </div>
+    
+    <!-- SCREEN 5: BATTLE/QUIZ SCREEN -->
+    <div id="battleScreen" class="game-screen">
+        <div class="battle-container">
+            <div class="battle-header">
+                <div class="kingdom-badge">
+                    <span id="battleKingdomIcon">🏰</span>
+                    <span id="battleKingdomName">Kingdom 1</span>
+                </div>
+                
+                <div class="progress-container">
+                    <div class="progress-bar-bg">
+                        <div class="progress-bar-fill" id="battleProgress"></div>
+                    </div>
+                </div>
+                
+                <div class="battle-stats">
+                    <span id="challengeNum">Challenge 1 / 20</span>
+                    <span id="challengePercent">0%</span>
+                </div>
+            </div>
+            
+            <div class="question-card">
+                <div class="challenge-label" id="challengeLabel">Challenge 1 - Determiners</div>
+                <div class="question-text" id="questionText"></div>
+                <div class="options-grid" id="optionsGrid"></div>
+            </div>
+            
+            <div class="battle-controls">
+                <button class="control-btn prev" id="prevBtn" onclick="prevQuestion()">← Previous</button>
+                <button class="control-btn next" id="nextBtn" onclick="nextQuestion()">Next →</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- SCREEN 6: VICTORY/DEFEAT -->
+    <div id="victoryScreen" class="game-screen">
+        <div class="victory-container">
+            <div class="victory-icon" id="victoryIcon">🏆</div>
+            <div class="victory-title" id="victoryTitle">KINGDOM CONQUERED!</div>
+            <div class="victory-subtitle" id="victorySubtitle">Well done, brave hero!</div>
+            
+            <div class="result-card">
+                <div class="gems-earned" id="gemsEarned">💎💎💎</div>
+                <div class="score-big" id="scoreBig">18/20</div>
+                <div class="score-message" id="scoreMsg">Excellent work!</div>
+                
+                <div class="victory-actions">
+                    <button class="action-btn secondary" onclick="retryKingdom()">🔄 Retry</button>
+                    <button class="action-btn primary" onclick="continueQuest()">Next Kingdom →</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- SCREEN 7: HALL OF FAME -->
+    <div id="hallOfFameScreen" class="game-screen">
+        <div class="hall-container">
+            <div class="hall-header">
+                <div class="trophy-icon">👑</div>
+                <div class="hall-title">QUEST COMPLETE!</div>
+                <div class="hall-subtitle">You have conquered all kingdoms and become a Grammar Knight!</div>
+            </div>
+            
+            <div class="certificate-scroll" id="certificate">
+                <div class="cert-header">
+                    <div class="total-score" id="finalScore">0/100</div>
+                    <div class="total-percent" id="finalPercent">0%</div>
+                </div>
+                
+                <div class="student-info">
+                    <div class="info-box">
+                        <div class="info-label">Hero Name</div>
+                        <div class="info-value" id="finalHeroName">-</div>
+                    </div>
+                    <div class="info-box">
+                        <div class="info-label">Quest Date</div>
+                        <div class="info-value" id="questDate">-</div>
+                    </div>
+                    <div class="info-box">
+                        <div class="info-label">Total Gems</div>
+                        <div class="info-value" id="finalGems">0/15 💎</div>
+                    </div>
+                </div>
+                
+                <h3 style="text-align: center; margin-bottom: 20px; font-family: 'MedievalSharp', cursive; font-size: 24px;">🏰 Kingdoms Conquered</h3>
+                <div class="kingdoms-list" id="kingdomsList"></div>
+            </div>
+            
+            <div class="hall-actions">
+                <button class="hall-btn share" onclick="shareCertificate()">📤 Share Certificate</button>
+                <button class="hall-btn restart" onclick="restartQuest()">🔄 New Quest</button>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Game State
+        const gameState = {
+            heroName: '',
+            currentKingdom: 0,
+            currentQuestion: 0,
+            answers: {},
+            kingdomProgress: Array(5).fill(null).map(() => ({ completed: false, score: 0, gems: 0 }))
+        };
+        
+        // Kingdom Configuration
+        const kingdoms = [
+            { id: 0, name: 'Grammar Village', icon: '🏰', topics: ['Determiners', 'Conjunctions'], description: 'Begin your journey in the peaceful village' },
+            { id: 1, name: 'Sentence Forest', icon: '🌲', topics: ['Sentence Types', 'Punctuation'], description: 'Navigate through the dense forest of words' },
+            { id: 2, name: 'Verb Battlefield', icon: '⚔️', topics: ['Do/Does/Did', 'Finite/Non-finite'], description: 'Conquer the mighty verb warriors' },
+            { id: 3, name: 'Time Temple', icon: '⏳', topics: ['Tenses', 'Would/Used to'], description: 'Master the ancient temple of time' },
+            { id: 4, name: 'Royal Castle', icon: '👑', topics: ['Wh-questions', 'Adverbs'], description: 'Claim the throne in the royal castle' }
+        ];
+        
+        // 100 Questions (20 per kingdom)
+        const questions = [
+            // Kingdom 0: Grammar Village
+            { kingdom: 0, topic: 'Determiners', q: 'I have ______ friends in this city.', options: ['many', 'much', 'a little', 'less'], answer: 'many', explanation: 'Use "many" with countable plural nouns.' },
+            { kingdom: 0, topic: 'Determiners', q: 'There is ______ milk left.', options: ['few', 'a few', 'little', 'a little'], answer: 'a little', explanation: 'Use "a little" with uncountable nouns.' },
+            { kingdom: 0, topic: 'Determiners', q: '______ student must submit work.', options: ['Each', 'Every', 'All', 'Both'], answer: 'Each', explanation: '"Each" is for individual items.' },
+            { kingdom: 0, topic: 'Determiners', q: 'He has ______ patience.', options: ['many', 'much', 'few', 'a few'], answer: 'much', explanation: 'Use "much" with uncountable nouns.' },
+            { kingdom: 0, topic: 'Determiners', q: '______ books are mine.', options: ['This', 'These', 'That', 'Much'], answer: 'These', explanation: 'Use "these" for plural near objects.' },
+            { kingdom: 0, topic: 'Determiners', q: 'She gave ______ advice.', options: ['a', 'an', 'some', 'many'], answer: 'some', explanation: 'Use "some" with uncountable nouns.' },
+            { kingdom: 0, topic: 'Determiners', q: '______ students passed.', options: ['All', 'Every', 'Each', 'Much'], answer: 'All', explanation: '"All" refers to complete group.' },
+            { kingdom: 0, topic: 'Determiners', q: 'I need ______ information.', options: ['some', 'any', 'many', 'few'], answer: 'some', explanation: 'Use "some" in affirmative sentences.' },
+            { kingdom: 0, topic: 'Determiners', q: '______ people understand this.', options: ['few', 'a few', 'little', 'a little'], answer: 'few', explanation: '"Few" means not many (negative).' },
+            { kingdom: 0, topic: 'Determiners', q: '______ knowledge is dangerous.', options: ['Few', 'A few', 'Little', 'A little'], answer: 'A little', explanation: 'Idiomatic expression with "a little".' },
+            { kingdom: 0, topic: 'Conjunctions', q: 'I will come ______ you call.', options: ['if', 'unless', 'until', 'since'], answer: 'if', explanation: 'Use "if" to show condition.' },
+            { kingdom: 0, topic: 'Conjunctions', q: 'Rich ______ unhappy.', options: ['and', 'but', 'or', 'so'], answer: 'but', explanation: '"But" shows contrast.' },
+            { kingdom: 0, topic: 'Conjunctions', q: 'Worked hard ______ she could pass.', options: ['so that', 'because', 'although', 'unless'], answer: 'so that', explanation: '"So that" expresses purpose.' },
+            { kingdom: 0, topic: 'Conjunctions', q: '______ tired, he continued.', options: ['Because', 'Although', 'If', 'Since'], answer: 'Although', explanation: '"Although" shows concession.' },
+            { kingdom: 0, topic: 'Conjunctions', q: 'Tea ______ coffee?', options: ['and', 'but', 'or', 'so'], answer: 'or', explanation: '"Or" presents alternatives.' },
+            { kingdom: 0, topic: 'Conjunctions', q: 'Absent ______ he was ill.', options: ['because', 'so', 'but', 'or'], answer: 'because', explanation: '"Because" shows reason.' },
+            { kingdom: 0, topic: 'Conjunctions', q: 'Wait ______ I return.', options: ['when', 'while', 'until', 'since'], answer: 'until', explanation: '"Until" indicates time limit.' },
+            { kingdom: 0, topic: 'Conjunctions', q: 'Succeed ______ he works.', options: ['if', 'unless', 'whether', 'though'], answer: 'if', explanation: '"If" for positive condition.' },
+            { kingdom: 0, topic: 'Conjunctions', q: 'Don\'t know ______ he\'ll come.', options: ['that', 'if', 'whether', 'unless'], answer: 'whether', explanation: 'Use "whether" with "or not".' },
+            { kingdom: 0, topic: 'Conjunctions', q: '______ you work, you fail.', options: ['If', 'Unless', 'Though', 'Since'], answer: 'Unless', explanation: '"Unless" means "if not".' },
+            
+            // Kingdom 1: Sentence Forest (20 questions)
+            { kingdom: 1, topic: 'Sentence Types', q: 'Type: "Close the door."', options: ['Declarative', 'Interrogative', 'Imperative', 'Exclamatory'], answer: 'Imperative', explanation: 'Commands are imperative.' },
+            { kingdom: 1, topic: 'Sentence Types', q: 'Type: "What a day!"', options: ['Declarative', 'Interrogative', 'Imperative', 'Exclamatory'], answer: 'Exclamatory', explanation: 'Expresses strong emotion.' },
+            { kingdom: 1, topic: 'Sentence Types', q: 'Type: "Where are you?"', options: ['Declarative', 'Interrogative', 'Imperative', 'Exclamatory'], answer: 'Interrogative', explanation: 'Questions are interrogative.' },
+            { kingdom: 1, topic: 'Sentence Types', q: 'Type: "Sun rises east."', options: ['Declarative', 'Interrogative', 'Imperative', 'Exclamatory'], answer: 'Declarative', explanation: 'Statements are declarative.' },
+            { kingdom: 1, topic: 'Sentence Types', q: 'One clause is ______ sentence.', options: ['simple', 'compound', 'complex', 'run-on'], answer: 'simple', explanation: 'Simple has one clause.' },
+            { kingdom: 1, topic: 'Sentence Types', q: 'Two clauses joined: ______.', options: ['simple', 'compound', 'complex', 'fragment'], answer: 'compound', explanation: 'Two independent = compound.' },
+            { kingdom: 1, topic: 'Sentence Types', q: 'Independent + dependent: ______.', options: ['simple', 'compound', 'complex', 'run-on'], answer: 'complex', explanation: 'Mix of clauses = complex.' },
+            { kingdom: 1, topic: 'Sentence Types', q: 'Which is imperative?', options: ['I am happy', 'Are you ready?', 'Please sit', 'What fun!'], answer: 'Please sit', explanation: 'Requests are imperative.' },
+            { kingdom: 1, topic: 'Sentence Types', q: 'Sentence needs ______.', options: ['subject, verb', 'noun, adjective', 'verb, adverb', 'subject, object'], answer: 'subject, verb', explanation: 'Basic sentence structure.' },
+            { kingdom: 1, topic: 'Sentence Types', q: '"Run!" is ______.', options: ['Declarative', 'Interrogative', 'Imperative', 'Exclamatory'], answer: 'Imperative', explanation: 'One-word command.' },
+            { kingdom: 1, topic: 'Punctuation', q: 'Correct: "Let\'s eat grandma"?', options: ['Correct', 'Needs comma', 'Wrong grammar', 'Perfect'], answer: 'Needs comma', explanation: 'Comma saves lives!' },
+            { kingdom: 1, topic: 'Punctuation', q: 'Question ends with ______.', options: ['Period', 'Comma', '?', '!'], answer: '?', explanation: 'Questions need question marks.' },
+            { kingdom: 1, topic: 'Punctuation', q: '"dogs bone" → ______.', options: ["dog's", "dogs'", "dogs", "dog"], answer: "dog's", explanation: 'Apostrophe shows possession.' },
+            { kingdom: 1, topic: 'Punctuation', q: 'Needs capital: ______.', options: ['river', 'mountain', 'Ganges', 'city'], answer: 'Ganges', explanation: 'Proper nouns capitalized.' },
+            { kingdom: 1, topic: 'Punctuation', q: 'List separator: ______.', options: ['Period', 'Comma', 'Colon', 'Semicolon'], answer: 'Comma', explanation: 'Commas separate items.' },
+            { kingdom: 1, topic: 'Punctuation', q: 'Quote punctuation: ______.', options: [', " "', ': " "', ', " ."', '" , "'], answer: ', " ."', explanation: 'Comma before, period inside.' },
+            { kingdom: 1, topic: 'Punctuation', q: 'List introducer: ______.', options: ['Comma', 'Colon', 'Semicolon', 'Dash'], answer: 'Colon', explanation: 'Colon introduces lists.' },
+            { kingdom: 1, topic: 'Punctuation', q: 'Possession: "Its" or "It\'s"?', options: ["It's", 'Its', 'Both', 'Neither'], answer: 'Its', explanation: '"Its" = possession.' },
+            { kingdom: 1, topic: 'Punctuation', q: 'Exclamation ends with ______.', options: ['.', '?', '!', ','], answer: '!', explanation: 'Exclamations use !' },
+            { kingdom: 1, topic: 'Punctuation', q: 'Semicolon joins ______.', options: ['dependent', 'independent', 'subordinate', 'relative'], answer: 'independent', explanation: 'Joins independent clauses.' },
+            
+            // Kingdom 2: Verb Battlefield (20 questions)
+            { kingdom: 2, topic: 'Do/Does/Did', q: '______ you like ice cream?', options: ['Do', 'Does', 'Did', 'Done'], answer: 'Do', explanation: 'Use "do" with you/I/we/they.' },
+            { kingdom: 2, topic: 'Do/Does/Did', q: '______ she play tennis?', options: ['Do', 'Does', 'Did', 'Doing'], answer: 'Does', explanation: 'Use "does" with he/she/it.' },
+            { kingdom: 2, topic: 'Do/Does/Did', q: '______ they visit yesterday?', options: ['Do', 'Does', 'Did', 'Done'], answer: 'Did', explanation: 'Past tense uses "did".' },
+            { kingdom: 2, topic: 'Do/Does/Did', q: 'He ______ not understand.', options: ['do', 'does', 'did', 'doing'], answer: 'does', explanation: 'Third person uses "does".' },
+            { kingdom: 2, topic: 'Do/Does/Did', q: 'I ______ not see him.', options: ['do', 'does', 'did', 'done'], answer: 'did', explanation: 'Past negative uses "did".' },
+            { kingdom: 2, topic: 'Do/Does/Did', q: '______ your brother work?', options: ['Do', 'Does', 'Did', 'Done'], answer: 'Does', explanation: 'Singular third person "does".' },
+            { kingdom: 2, topic: 'Do/Does/Did', q: 'Where ______ you go?', options: ['do', 'does', 'did', 'doing'], answer: 'did', explanation: 'Past question uses "did".' },
+            { kingdom: 2, topic: 'Do/Does/Did', q: '______ he finish homework?', options: ['Do', 'Does', 'Did', 'Done'], answer: 'Did', explanation: 'Past tense context.' },
+            { kingdom: 2, topic: 'Do/Does/Did', q: 'They ______ not want.', options: ['do', 'does', 'did', 'doing'], answer: 'do', explanation: 'Plural uses "do".' },
+            { kingdom: 2, topic: 'Do/Does/Did', q: '______ it rain?', options: ['Do', 'Does', 'Did', 'Done'], answer: 'Did', explanation: 'Past event uses "did".' },
+            { kingdom: 2, topic: 'Finite/Non-finite', q: '"She likes to dance" - "likes" is ______.', options: ['finite', 'non-finite', 'gerund', 'participle'], answer: 'finite', explanation: 'Shows tense and person.' },
+            { kingdom: 2, topic: 'Finite/Non-finite', q: '"to dance" is ______.', options: ['finite', 'infinitive', 'gerund', 'participle'], answer: 'infinitive', explanation: 'To + verb = infinitive.' },
+            { kingdom: 2, topic: 'Finite/Non-finite', q: '"Swimming is fun" - "swimming" is ______.', options: ['finite', 'gerund', 'participle', 'infinitive'], answer: 'gerund', explanation: 'Verb acting as noun.' },
+            { kingdom: 2, topic: 'Finite/Non-finite', q: '"broken window" - "broken" is ______.', options: ['finite', 'gerund', 'participle', 'infinitive'], answer: 'participle', explanation: 'Verb acting as adjective.' },
+            { kingdom: 2, topic: 'Finite/Non-finite', q: 'Finite in "He is running"?', options: ['is', 'running', 'to run', 'run'], answer: 'is', explanation: 'Shows tense.' },
+            { kingdom: 2, topic: 'Finite/Non-finite', q: '"want" in "I want to go" is ______.', options: ['non-finite', 'finite', 'gerund', 'participle'], answer: 'finite', explanation: 'Main verb showing tense.' },
+            { kingdom: 2, topic: 'Finite/Non-finite', q: '"Reading books" - "reading" is ______.', options: ['finite', 'gerund', 'infinitive', 'participle'], answer: 'gerund', explanation: 'Subject of sentence.' },
+            { kingdom: 2, topic: 'Finite/Non-finite', q: 'Non-finite verbs lack ______.', options: ['action', 'tense', 'meaning', 'form'], answer: 'tense', explanation: 'Don\'t change with tense.' },
+            { kingdom: 2, topic: 'Finite/Non-finite', q: '"keeps" in "She keeps talking" is ______.', options: ['non-finite', 'finite', 'gerund', 'infinitive'], answer: 'finite', explanation: 'Shows person and tense.' },
+            { kingdom: 2, topic: 'Finite/Non-finite', q: 'Infinitive = "to" + ______.', options: ['gerund', 'base form', 'past form', 'participle'], answer: 'base form', explanation: 'Basic verb form.' },
+            
+            // Kingdom 3: Time Temple (20 questions)
+            { kingdom: 3, topic: 'Tenses', q: 'I ______ to school daily.', options: ['go', 'goes', 'went', 'going'], answer: 'go', explanation: 'Simple present habit.' },
+            { kingdom: 3, topic: 'Tenses', q: 'She ______ a book now.', options: ['read', 'reads', 'is reading', 'has read'], answer: 'is reading', explanation: 'Present continuous action.' },
+            { kingdom: 3, topic: 'Tenses', q: 'They ______ movie yesterday.', options: ['watch', 'watched', 'are watching', 'have watched'], answer: 'watched', explanation: 'Simple past completed.' },
+            { kingdom: 3, topic: 'Tenses', q: 'He ______ here 5 years.', options: ['lives', 'is living', 'has lived', 'lived'], answer: 'has lived', explanation: 'Present perfect duration.' },
+            { kingdom: 3, topic: 'Tenses', q: 'I ______ finish tomorrow.', options: ['will', 'would', 'shall', 'am'], answer: 'will', explanation: 'Simple future prediction.' },
+            { kingdom: 3, topic: 'Tenses', q: 'Cooking ______ I arrived.', options: ['while', 'when', 'since', 'until'], answer: 'when', explanation: 'Point in time.' },
+            { kingdom: 3, topic: 'Tenses', q: '______ it rained, we stayed.', options: ['When', 'While', 'Since', 'Until'], answer: 'While', explanation: 'Two continuous actions.' },
+            { kingdom: 3, topic: 'Tenses', q: 'Coming, ______ you?', options: ["aren't", "isn't", "don't", "didn't"], answer: "aren't", explanation: 'Opposite tag form.' },
+            { kingdom: 3, topic: 'Tenses', q: 'He said "I\'m tired" → He said ______.', options: ['I am tired', 'he is tired', 'he was tired', 'I was tired'], answer: 'he was tired', explanation: 'Reported speech backshift.' },
+            { kingdom: 3, topic: 'Tenses', q: '"Where do you live?" → She asked where ______.', options: ['do I live', 'I lived', 'did I live', 'I live'], answer: 'I lived', explanation: 'Reported question format.' },
+            { kingdom: 3, topic: 'Would/Used to', q: 'I ______ play cricket young.', options: ['would', 'used to', 'Both', 'Neither'], answer: 'Both', explanation: 'Both express past habits.' },
+            { kingdom: 3, topic: 'Would/Used to', q: 'She ______ live in Delhi.', options: ['would', 'used to', 'Both', 'Neither'], answer: 'used to', explanation: 'Past state needs "used to".' },
+            { kingdom: 3, topic: 'Would/Used to', q: 'They ______ visit Sundays.', options: ['would', 'used to', 'Both', 'Neither'], answer: 'Both', explanation: 'Repeated past actions.' },
+            { kingdom: 3, topic: 'Would/Used to', q: 'He ______ have long hair.', options: ['would', 'used to', 'Both', 'Neither'], answer: 'used to', explanation: 'Past state description.' },
+            { kingdom: 3, topic: 'Would/Used to', q: 'We ______ beach summers.', options: ['would', 'used to', 'Both', 'Neither'], answer: 'Both', explanation: 'Past repeated actions.' },
+            { kingdom: 3, topic: 'Would/Used to', q: 'I ______ be shy.', options: ['would', 'used to', 'Both', 'Neither'], answer: 'used to', explanation: 'Past characteristic.' },
+            { kingdom: 3, topic: 'Would/Used to', q: 'If I had money, I ______ buy.', options: ['would', 'used to', 'will', 'shall'], answer: 'would', explanation: 'Conditional sentence.' },
+            { kingdom: 3, topic: 'Would/Used to', q: 'She ______ work bank.', options: ['would', 'used to', 'Both', 'Neither'], answer: 'used to', explanation: 'No longer true.' },
+            { kingdom: 3, topic: 'Would/Used to', q: 'We ______ walk school.', options: ['would', 'used to', 'Both', 'Neither'], answer: 'Both', explanation: 'Past regular actions.' },
+            { kingdom: 3, topic: 'Would/Used to', q: '______ you like tea?', options: ['Would', 'Used to', 'Will', 'Should'], answer: 'Would', explanation: 'Polite offer.' },
+            
+            // Kingdom 4: Royal Castle (20 questions)
+            { kingdom: 4, topic: 'Wh-questions', q: '______ is your name?', options: ['What', 'Who', 'Where', 'When'], answer: 'What', explanation: 'Ask about things/names.' },
+            { kingdom: 4, topic: 'Wh-questions', q: '______ are you going?', options: ['What', 'Who', 'Where', 'Why'], answer: 'Where', explanation: 'Ask about places.' },
+            { kingdom: 4, topic: 'Wh-questions', q: '______ did you arrive?', options: ['What', 'Where', 'When', 'Who'], answer: 'When', explanation: 'Ask about time.' },
+            { kingdom: 4, topic: 'Wh-questions', q: '______ are you late?', options: ['What', 'When', 'Why', 'Which'], answer: 'Why', explanation: 'Ask about reasons.' },
+            { kingdom: 4, topic: 'Wh-questions', q: '______ is that man?', options: ['What', 'Who', 'Where', 'When'], answer: 'Who', explanation: 'Ask about people.' },
+            { kingdom: 4, topic: 'Wh-questions', q: '______ book do you want?', options: ['What', 'Who', 'Which', 'Where'], answer: 'Which', explanation: 'Choose from options.' },
+            { kingdom: 4, topic: 'Wh-questions', q: '______ did you meet?', options: ['What', 'Whom', 'Where', 'When'], answer: 'Whom', explanation: 'Object in formal questions.' },
+            { kingdom: 4, topic: 'Wh-questions', q: '______ car is faster?', options: ['What', 'Which', 'Who', 'Where'], answer: 'Which', explanation: 'Choice between items.' },
+            { kingdom: 4, topic: 'Wh-questions', q: '______ does this belong to?', options: ['What', 'Who', 'Whom', 'Whose'], answer: 'Whom', explanation: 'After prepositions.' },
+            { kingdom: 4, topic: 'Wh-questions', q: '______ pen is this?', options: ['What', 'Who', 'Which', 'Whose'], answer: 'Whose', explanation: 'Ask about possession.' },
+            { kingdom: 4, topic: 'Adverbs', q: 'She sings ______.', options: ['beautiful', 'beautifully', 'beauty', 'beautify'], answer: 'beautifully', explanation: 'Adverb modifies verb.' },
+            { kingdom: 4, topic: 'Adverbs', q: 'He drives ______.', options: ['careful', 'carefully', 'care', 'caring'], answer: 'carefully', explanation: 'Adverb describes manner.' },
+            { kingdom: 4, topic: 'Adverbs', q: 'She ______ visits.', options: ['usual', 'usually', 'unusual', 'unusually'], answer: 'usually', explanation: 'Adverb of frequency.' },
+            { kingdom: 4, topic: 'Adverbs', q: 'Finished ______.', options: ['quick', 'quickly', 'quickness', 'quicker'], answer: 'quickly', explanation: 'Adverb modifies verb.' },
+            { kingdom: 4, topic: 'Adverbs', q: 'He ______ goes gym.', options: ['rare', 'rarely', 'rarity', 'rarer'], answer: 'rarely', explanation: 'Frequency adverb.' },
+            { kingdom: 4, topic: 'Adverbs', q: 'Speaks English ______.', options: ['fluent', 'fluently', 'fluency', 'more fluent'], answer: 'fluently', explanation: 'Describes speaking manner.' },
+            { kingdom: 4, topic: 'Adverbs', q: 'Train arrived ______.', options: ['late', 'lately', 'later', 'latest'], answer: 'late', explanation: 'Time adverb.' },
+            { kingdom: 4, topic: 'Adverbs', q: 'Answered ______.', options: ['correct', 'correctly', 'correction', 'corrected'], answer: 'correctly', explanation: 'Manner of answering.' },
+            { kingdom: 4, topic: 'Adverbs', q: 'She smiled ______.', options: ['happy', 'happily', 'happiness', 'happier'], answer: 'happily', explanation: 'Describes smiling.' },
+            { kingdom: 4, topic: 'Adverbs', q: 'Worked ______ to finish.', options: ['hard', 'hardly', 'harder', 'hardest'], answer: 'hard', explanation: '"Hard" = intensely.' }
+        ];
+        
+        // Initialize stars background
+        function createStars() {
+            const container = document.getElementById('starsContainer');
+            for (let i = 0; i < 100; i++) {
+                const star = document.createElement('div');
+                star.className = 'star';
+                star.style.left = Math.random() * 100 + '%';
+                star.style.top = Math.random() * 100 + '%';
+                star.style.animationDelay = Math.random() * 3 + 's';
+                container.appendChild(star);
+            }
+        }
+        
+        // Screen transitions
+        function showScreen(screenId) {
+            document.querySelectorAll('.game-screen').forEach(s => s.classList.remove('active'));
+            setTimeout(() => {
+                document.getElementById(screenId).classList.add('active');
+            }, 100);
+        }
+        
+        // SCREEN 1 → SCREEN 2
+        function showHeroSetup() {
+            showScreen('heroSetupScreen');
+        }
+        
+        // SCREEN 2 → SCREEN 3
+        function beginQuest() {
+            const name = document.getElementById('heroName').value.trim();
+            if (!name) {
+                alert('⚔️ Enter your hero name!');
+                return;
+            }
+            gameState.heroName = name;
+            showScreen('kingdomMapScreen');
+            renderKingdomMap();
+        }
+        
+        // Render Kingdom Map
+        function renderKingdomMap() {
+            document.getElementById('heroDisplay').textContent = gameState.heroName;
+            
+            const totalGems = gameState.kingdomProgress.reduce((s, k) => s + k.gems, 0);
+            document.getElementById('gemsDisplay').textContent = `${totalGems}/15`;
+            
+            const completedCount = gameState.kingdomProgress.filter(k => k.completed).length;
+            const progress = (completedCount / 5 * 100).toFixed(0);
+            document.getElementById('progressDisplay').textContent = `${progress}%`;
+            
+            const grid = document.getElementById('kingdomsGrid');
+            grid.innerHTML = '';
+            
+            kingdoms.forEach((kingdom, index) => {
+                const isLocked = index > 0 && !gameState.kingdomProgress[index - 1].completed;
+                const data = gameState.kingdomProgress[index];
+                
+                const card = document.createElement('div');
+                card.className = `kingdom-card ${isLocked ? 'locked' : ''} ${data.completed ? 'completed' : ''}`;
+                
+                let gemsHtml = '';
+                if (data.completed) {
+                    gemsHtml = '<div class="kingdom-gems">' + '💎'.repeat(data.gems) + '◇'.repeat(3 - data.gems) + '</div>';
+                    gemsHtml += `<div class="kingdom-score">${data.score}/20 conquered</div>`;
+                } else if (!isLocked) {
+                    gemsHtml = '<div class="kingdom-gems">◇◇◇</div>';
+                }
+                
+                card.innerHTML = `
+                    <div class="kingdom-icon">${kingdom.icon}</div>
+                    <div class="kingdom-name">Kingdom ${index + 1}<br>${kingdom.name}</div>
+                    <div class="kingdom-topics">${kingdom.topics.join(' • ')}</div>
+                    ${gemsHtml}
+                `;
+                
+                if (!isLocked) {
+                    card.onclick = () => showPreBattle(index);
+                }
+                
+                grid.appendChild(card);
+            });
+            
+            const allCompleted = gameState.kingdomProgress.every(k => k.completed);
+            document.getElementById('viewCertBtn').style.display = allCompleted ? 'block' : 'none';
+        }
+        
+        // SCREEN 3 → SCREEN 4
+        function showPreBattle(kingdomIndex) {
+            gameState.currentKingdom = kingdomIndex;
+            const kingdom = kingdoms[kingdomIndex];
+            
+            document.getElementById('briefingIcon').textContent = kingdom.icon;
+            document.getElementById('briefingTitle').textContent = `Kingdom ${kingdomIndex + 1}: ${kingdom.name}`;
+            document.getElementById('briefingDesc').textContent = kingdom.description;
+            
+            document.getElementById('readyPrompt').style.display = 'block';
+            document.getElementById('countdownDisplay').style.display = 'none';
+            
+            showScreen('preBattleScreen');
+        }
+        
+        // SCREEN 4 → SCREEN 5 (with countdown)
+        function startCountdown() {
+            document.querySelector('.start-battle-btn').style.display = 'none';
+            document.getElementById('readyPrompt').style.display = 'none';
+            const countdownEl = document.getElementById('countdownDisplay');
+            countdownEl.style.display = 'block';
+            
+            let count = 3;
+            countdownEl.textContent = count;
+            
+            const interval = setInterval(() => {
+                count--;
+                if (count > 0) {
+                    countdownEl.textContent = count;
+                } else {
+                    countdownEl.textContent = 'GO!';
+                    clearInterval(interval);
+                    setTimeout(() => {
+                        startBattle();
+                    }, 500);
+                }
+            }, 1000);
+        }
+        
+        // Start Battle
+        function startBattle() {
+            gameState.currentQuestion = 0;
+            gameState.answers = {};
+            
+            const kingdom = kingdoms[gameState.currentKingdom];
+            document.getElementById('battleKingdomIcon').textContent = kingdom.icon;
+            document.getElementById('battleKingdomName').textContent = `Kingdom ${gameState.currentKingdom + 1}: ${kingdom.name}`;
+            
+            showScreen('battleScreen');
+            displayQuestion();
+        }
+        
+        // Display Question
+        function displayQuestion() {
+            const kingdomQuestions = questions.filter(q => q.kingdom === gameState.currentKingdom);
+            const question = kingdomQuestions[gameState.currentQuestion];
+            
+            const progress = ((gameState.currentQuestion + 1) / 20 * 100).toFixed(0);
+            document.getElementById('battleProgress').style.width = progress + '%';
+            document.getElementById('challengeNum').textContent = `Challenge ${gameState.currentQuestion + 1} / 20`;
+            document.getElementById('challengePercent').textContent = progress + '%';
+            
+            document.getElementById('challengeLabel').textContent = `Challenge ${gameState.currentQuestion + 1} - ${question.topic}`;
+            document.getElementById('questionText').textContent = question.q;
+            
+            const optionsGrid = document.getElementById('optionsGrid');
+            optionsGrid.innerHTML = '';
+            
+            question.options.forEach((option, index) => {
+                const letter = String.fromCharCode(65 + index);
+                const btn = document.createElement('div');
+                btn.className = 'option-btn';
+                if (gameState.answers[gameState.currentQuestion] === option) {
+                    btn.classList.add('selected');
+                }
+                btn.innerHTML = `
+                    <div class="option-letter">${letter}</div>
+                    <span>${option}</span>
+                `;
+                btn.onclick = () => selectAnswer(option);
+                optionsGrid.appendChild(btn);
+            });
+            
+            document.getElementById('prevBtn').disabled = gameState.currentQuestion === 0;
+            
+            const nextBtn = document.getElementById('nextBtn');
+            if (gameState.currentQuestion === 19) {
+                nextBtn.textContent = 'Complete Kingdom 🏆';
+            } else {
+                nextBtn.textContent = 'Next →';
+            }
+        }
+        
+        // Select Answer
+        function selectAnswer(answer) {
+            gameState.answers[gameState.currentQuestion] = answer;
+            
+            const btns = document.querySelectorAll('.option-btn');
+            btns.forEach(btn => {
+                btn.classList.remove('selected');
+                if (btn.querySelector('span').textContent === answer) {
+                    btn.classList.add('selected');
+                }
+            });
+        }
+        
+        // Navigation
+        function prevQuestion() {
+            if (gameState.currentQuestion > 0) {
+                gameState.currentQuestion--;
+                displayQuestion();
+            }
+        }
+        
+        function nextQuestion() {
+            if (gameState.currentQuestion < 19) {
+                gameState.currentQuestion++;
+                displayQuestion();
+            } else {
+                completeBattle();
+            }
+        }
+        
+        // Complete Battle → SCREEN 6
+        function completeBattle() {
+            const kingdomQuestions = questions.filter(q => q.kingdom === gameState.currentKingdom);
+            let correct = 0;
+            
+            kingdomQuestions.forEach((q, index) => {
+                if (gameState.answers[index] === q.answer) {
+                    correct++;
+                }
+            });
+            
+            const percentage = (correct / 20 * 100);
+            let gems = 0;
+            if (percentage >= 90) gems = 3;
+            else if (percentage >= 70) gems = 2;
+            else if (percentage >= 50) gems = 1;
+            
+            gameState.kingdomProgress[gameState.currentKingdom] = {
+                completed: true,
+                score: correct,
+                gems: gems
+            };
+            
+            showVictory(correct, gems);
+        }
+        
+        // Show Victory
+        function showVictory(score, gems) {
+            let icon = '🎉';
+            let title = 'KINGDOM CONQUERED!';
+            let subtitle = 'Well done, brave hero!';
+            
+            if (gems === 3) {
+                icon = '👑';
+                title = 'LEGENDARY VICTORY!';
+                subtitle = 'You are a true Grammar Knight!';
+                createConfetti();
+            } else if (gems === 2) {
+                icon = '⚔️';
+                title = 'GREAT VICTORY!';
+                subtitle = 'Excellent battle performance!';
+            } else if (gems === 1) {
+                icon = '🛡️';
+                title = 'Victory!';
+                subtitle = 'Good effort, hero!';
+            } else {
+                icon = '📖';
+                title = 'Keep Training!';
+                subtitle = 'Try again to master this kingdom!';
+            }
+            
+            document.getElementById('victoryIcon').textContent = icon;
+            document.getElementById('victoryTitle').textContent = title;
+            document.getElementById('victorySubtitle').textContent = subtitle;
+            document.getElementById('gemsEarned').textContent = '💎'.repeat(gems) + '◇'.repeat(3 - gems);
+            document.getElementById('scoreBig').textContent = `${score}/20`;
+            document.getElementById('scoreMsg').textContent = `${(score/20*100).toFixed(0)}% Enemies Defeated`;
+            
+            showScreen('victoryScreen');
+        }
+        
+        // Continue Quest
+        function continueQuest() {
+            if (gameState.currentKingdom < 4) {
+                showScreen('kingdomMapScreen');
+                renderKingdomMap();
+            } else {
+                showHallOfFame();
+            }
+        }
+        
+        // Retry Kingdom
+        function retryKingdom() {
+            showPreBattle(gameState.currentKingdom);
+        }
+        
+        // SCREEN 7: Hall of Fame
+        function showHallOfFame() {
+            const totalScore = gameState.kingdomProgress.reduce((s, k) => s + k.score, 0);
+            const totalGems = gameState.kingdomProgress.reduce((s, k) => s + k.gems, 0);
+            const percentage = (totalScore / 100 * 100).toFixed(1);
+            
+            document.getElementById('finalScore').textContent = `${totalScore}/100`;
+            document.getElementById('finalPercent').textContent = `${percentage}%`;
+            document.getElementById('finalHeroName').textContent = gameState.heroName;
+            document.getElementById('questDate').textContent = new Date().toLocaleDateString('en-IN');
+            document.getElementById('finalGems').textContent = `${totalGems}/15 💎`;
+            
+            const list = document.getElementById('kingdomsList');
+            list.innerHTML = '';
+            
+            kingdoms.forEach((kingdom, index) => {
+                const data = gameState.kingdomProgress[index];
+                const div = document.createElement('div');
+                div.className = 'kingdom-result';
+                div.innerHTML = `
+                    <div class="kingdom-result-icon">${kingdom.icon}</div>
+                    <div class="kingdom-result-info">
+                        <div class="kingdom-result-name">Kingdom ${index + 1}: ${kingdom.name}</div>
+                        <div class="kingdom-result-score">${data.score}/20 enemies defeated (${(data.score/20*100).toFixed(0)}%)</div>
+                    </div>
+                    <div class="kingdom-result-gems">${'💎'.repeat(data.gems)}${'◇'.repeat(3-data.gems)}</div>
+                `;
+                list.appendChild(div);
+            });
+            
+            showScreen('hallOfFameScreen');
+            
+            if (totalGems >= 12) {
+                createConfetti();
+            }
+        }
+        
+        // Share Certificate
+        function shareCertificate() {
+            const totalScore = gameState.kingdomProgress.reduce((s, k) => s + k.score, 0);
+            const totalGems = gameState.kingdomProgress.reduce((s, k) => s + k.gems, 0);
+            const shareText = `⚔️ I completed GRAMMAR QUEST!\n\nScore: ${totalScore}/100\nGems: ${totalGems}/15 💎\nHero: ${gameState.heroName}\n\nJoin the quest!`;
+            
+            const cert = document.getElementById('certificate');
+            html2canvas(cert, { backgroundColor: '#f5f0e1', scale: 2 }).then(canvas => {
+                canvas.toBlob(blob => {
+                    const file = new File([blob], 'grammar-quest-certificate.png', { type: 'image/png' });
+                    
+                    if (navigator.canShare && navigator.canShare({ files: [file] })) {
+                        navigator.share({ files: [file], title: 'Grammar Quest Certificate', text: shareText }).catch(err => console.log(err));
+                    } else {
+                        const url = URL.createObjectURL(blob);
+                        const a = document.createElement('a');
+                        a.href = url;
+                        a.download = 'grammar-quest-certificate.png';
+                        a.click();
+                        URL.revokeObjectURL(url);
+                        
+                        setTimeout(() => {
+                            window.open('https://wa.me/?text=' + encodeURIComponent(shareText));
+                        }, 500);
+                    }
+                });
+            });
+        }
+        
+        // Restart Quest
+        function restartQuest() {
+            if (confirm('🗡️ Start a new quest? Your progress will be reset.')) {
+                gameState.kingdomProgress = Array(5).fill(null).map(() => ({ completed: false, score: 0, gems: 0 }));
+                showScreen('kingdomMapScreen');
+                renderKingdomMap();
+            }
+        }
+        
+        // Confetti
+        function createConfetti() {
+            const colors = ['#daa520', '#b8860b', '#f5f0e1', '#ff6347', '#4169e1'];
+            for (let i = 0; i < 50; i++) {
+                setTimeout(() => {
+                    const confetti = document.createElement('div');
+                    confetti.className = 'confetti';
+                    confetti.style.left = Math.random() * 100 + '%';
+                    confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                    confetti.style.animation = `fall ${2 + Math.random() * 2}s linear`;
+                    document.body.appendChild(confetti);
+                    
+                    setTimeout(() => confetti.remove(), 4000);
+                }, i * 30);
+            }
+        }
+        
+        // Initialize
+        window.addEventListener('DOMContentLoaded', createStars);
+    </script>
+</body>
+</html>
